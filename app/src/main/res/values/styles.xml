@@ -48,7 +48,7 @@
     </style>
 
     <style name="DialpadButton">
-        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:textColor">@null</item>
     </style>
 

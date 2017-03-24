@@ -80,9 +80,6 @@ public class Utils {
 
     public static void showFabWithAnimation(final FloatingActionButton fab) {
         fab.setVisibility(View.INVISIBLE);
-        fab.setScaleX(0.0F);
-        fab.setScaleY(0.0F);
-        fab.setAlpha(0.0F);
         fab.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override public boolean onPreDraw() {
                 fab.getViewTreeObserver().removeOnPreDrawListener(this);

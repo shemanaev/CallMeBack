@@ -1,11 +1,12 @@
 package com.melnykov.callmeback.ui;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
+import com.nineoldandroids.animation.*;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -178,7 +179,8 @@ public class DialpadFragment extends Fragment {
     }
 
     private void animateHeader(final int colorTo, final int repeatCount, boolean cancelPrevious) {
-        final int colorFrom = ((ColorDrawable) mHeader.getBackground()).getColor();
+        Bitmap headerBitmap = drawableToBitmap(mHeader.getBackground());
+        final int colorFrom = headerBitmap.getPixel(0, 0);
 
         if (colorFrom == colorTo || (mIsAnimationRunning && !cancelPrevious)) return;
 
@@ -210,5 +212,27 @@ public class DialpadFragment extends Fragment {
         }
         mColorAnimation.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
         mColorAnimation.start();
+    }
+
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if(bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 }
